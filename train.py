@@ -4,9 +4,9 @@ import torch.optim as optim
 from model import GraphAugmentedForecastingModel
 
 # Load processed data
-train_X, train_Y = torch.load("processed/train.pt")
-val_X, val_Y = torch.load("processed/val.pt")
-graph_data = torch.load("processed/graph.pt")
+train_X, train_Y = torch.load("processed/train.pt", weights_only=False)
+val_X, val_Y = torch.load("processed/val.pt", weights_only=False)
+graph_data = torch.load("processed/graph.pt", weights_only=False)
 
 num_nodes = graph_data.x.shape[0]
 input_length = train_X.shape[-1]
