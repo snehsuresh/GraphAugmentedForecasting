@@ -9,8 +9,8 @@ np.random.seed(42)
 # Parameters
 num_nodes = 50          # number of event types (nodes)
 num_timesteps = 1000    # length of the time series
-base_prob = 0.01        # base probability for an event at any time
-bonus_prob = 0.05       # additional probability if any neighbor had an event in the previous timestep
+base_prob = 0.05       # base probability for an event at any time
+bonus_prob = 0.2       # additional probability if any neighbor had an event in the previous timestep
 
 # Generate a random graph using networkx (Erdős-Rényi graph)
 graph_prob = 0.1  # probability of edge creation

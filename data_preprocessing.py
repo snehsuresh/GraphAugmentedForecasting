@@ -1,63 +1,64 @@
 import numpy as np
 import pandas as pd
 import torch
-import os
 from torch_geometric.data import Data
+import os
 
 # Parameters
-window_size = 20  # length of input sequence
-forecast_horizon = 1  # forecast next time step
+window_size = 20
+forecast_horizon = 5  # Expanded to capture patterns across time
 train_ratio = 0.7
 val_ratio = 0.15
-# test_ratio = remaining portion
 
-# Create processed data directory
-os.makedirs("processed", exist_ok=True)
-
-# Load time series data
+# Load data
 df = pd.read_csv("data/time_series.csv")
-# Remove the time column (we only need the values)
-ts_data = df.drop(columns=["time"]).values  # shape: (num_timesteps, num_nodes)
+ts_data = df.drop(columns=["time"]).values
+
 num_timesteps, num_nodes = ts_data.shape
 
-# Prepare sliding-window samples for all nodes simultaneously.
-# Each sample is an array of shape (num_nodes, window_size), target is (num_nodes,)
-X_samples = []
-Y_samples = []
+# Build co-occurrence matrix
+co_occurrence = np.zeros((num_nodes, num_nodes), dtype=np.float32)
 
+for t in range(1, num_timesteps):
+    active_nodes = np.where(ts_data[t] == 1)[0]
+    for i in active_nodes:
+        for j in active_nodes:
+            if i != j:
+                co_occurrence[i, j] += 1
+
+# Normalize into probabilities
+co_occurrence = co_occurrence / (np.sum(co_occurrence, axis=1, keepdims=True) + 1e-6)
+
+# Sliding window samples
+X_samples, Y_samples = [], []
 for t in range(num_timesteps - window_size - forecast_horizon + 1):
-    X_samples.append(ts_data[t: t + window_size, :].T)  # shape (num_nodes, window_size)
-    Y_samples.append(ts_data[t + window_size: t + window_size + forecast_horizon, :].T.squeeze())
+    X_samples.append(ts_data[t:t+window_size].T)
+    Y_samples.append(ts_data[t+window_size:t+window_size+forecast_horizon].T)
 
-X_samples = np.array(X_samples)  # shape: (num_samples, num_nodes, window_size)
-Y_samples = np.array(Y_samples)  # shape: (num_samples, num_nodes)
+X_samples = np.array(X_samples)
+Y_samples = np.array(Y_samples)
 
-num_samples = X_samples.shape[0]
-train_end = int(num_samples * train_ratio)
-val_end = int(num_samples * (train_ratio + val_ratio))
+# Train/val/test split
+train_end = int(len(X_samples) * train_ratio)
+val_end = int(len(X_samples) * (train_ratio + val_ratio))
 
-# Convert to Torch Tensors (float for BCE)
-X_train = torch.tensor(X_samples[:train_end], dtype=torch.float32)
-Y_train = torch.tensor(Y_samples[:train_end], dtype=torch.float32)
-X_val = torch.tensor(X_samples[train_end:val_end], dtype=torch.float32)
-Y_val = torch.tensor(Y_samples[train_end:val_end], dtype=torch.float32)
-X_test = torch.tensor(X_samples[val_end:], dtype=torch.float32)
-Y_test = torch.tensor(Y_samples[val_end:], dtype=torch.float32)
+X_train, Y_train = X_samples[:train_end], Y_samples[:train_end]
+X_val, Y_val = X_samples[train_end:val_end], Y_samples[train_end:val_end]
+X_test, Y_test = X_samples[val_end:], Y_samples[val_end:]
 
-torch.save((X_train, Y_train), "processed/train.pt")
-torch.save((X_val, Y_val), "processed/val.pt")
-torch.save((X_test, Y_test), "processed/test.pt")
+# Convert to tensors
+def to_tensor(arr):
+    return torch.tensor(arr, dtype=torch.float32)
 
-print(f"Preprocessing complete. Samples: Train={X_train.shape[0]}, Val={X_val.shape[0]}, Test={X_test.shape[0]}")
+torch.save((to_tensor(X_train), to_tensor(Y_train)), "processed/train.pt")
+torch.save((to_tensor(X_val), to_tensor(Y_val)), "processed/val.pt")
+torch.save((to_tensor(X_test), to_tensor(Y_test)), "processed/test.pt")
 
-# Build the PyTorch Geometric graph data object
-edge_df = pd.read_csv("data/graph_edges.csv")
-edge_index = torch.tensor(edge_df.values.T, dtype=torch.long)
-
-# For node features, we can simply use an identity matrix or ones.
-# Here, we use a learnable embedding so the initial features can be ones.
-node_features = torch.ones((num_nodes, 16))  # 16-dimensional initial features
+# Graph Data - Co-occurrence Graph
+edge_index = torch.tensor(np.stack(np.where(co_occurrence > 0)), dtype=torch.long)
+node_features = torch.tensor(co_occurrence.sum(axis=1, keepdims=True), dtype=torch.float32)
 
 graph_data = Data(x=node_features, edge_index=edge_index)
 torch.save(graph_data, "processed/graph.pt")
-print("Graph data saved to processed/graph.pt")
+
+print("Preprocessing complete. Data and graph saved.")
