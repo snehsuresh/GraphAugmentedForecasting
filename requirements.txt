@@ -1,0 +1,11 @@
+torch
+torchvision
+torch-scatter
+torch-sparse
+torch-cluster
+torch-spline-conv
+torch-geometric
+networkx
+numpy
+pandas
+matplotlib

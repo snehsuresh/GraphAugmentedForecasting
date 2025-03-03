@@ -173,3 +173,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 graph_env
+pytorch_sparse/
+parallel-hashmap/
