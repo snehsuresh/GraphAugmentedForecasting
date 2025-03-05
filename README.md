@@ -62,19 +62,6 @@ This adds cross-sensor spatial awareness into the anomaly detection process.
 - Highly connected sensors (many neighbors) gain the most from graph augmentation.
 - Isolated or poorly connected sensors show less improvement or even slight degradation.
 
-### Example Plot
-
-**Per-Node F1 Improvement vs Node Degree (METR-LA)**  
-![F1 vs Degree](media/f1_vs_degree.png)
-
----
-
-## 🔥 Detection Example
-
-Example forecast vs actual for a Yahoo S5 time series, comparing detected anomalies (Graph-LSTM) to ground truth.  
-![Forecast vs Actual](media/forecast_vs_actual.png)
-
----
 
 ## 📡 Graph Ablation Study
 
