@@ -87,12 +87,12 @@ Example forecast vs actual for a Yahoo S5 time series, comparing detected anomal
 
 | Description | Image |
 |---|---|
-| Forecast Example (Yahoo S5) | ![Forecast Example](media/forecast_vs_actual.png) |
-| Per-Node F1 Improvement vs Node Degree | ![F1 vs Degree](media/f1_vs_degree.png) |
-| Node-Level Heatmap: Graph Benefit (METR-LA) | ![METR-LA Heatmap](media/metrla_graph_benefit_heatmap.png) |
-| Node-Level Heatmap: Graph Benefit (Yahoo S5) | ![Yahoo S5 Heatmap](media/yahoo_s5_graph_benefit_heatmap.png) |
-| Node-Wise F1: Real Graph vs Random Graph (METR-LA) | ![METR-LA Nodewise F1](media/metrla_nodewise_f1_heatmap.png) |
-| Node-Wise F1: Real Graph vs Random Graph (Yahoo S5) | ![Yahoo S5 Nodewise F1](media/yahoo_s5_nodewise_f1_heatmap.png) |
+| Forecast Example (Yahoo S5) | ![Forecast Example](results/forecast_vs_actual_plots/forecast_vs_actual_node_4.png) |
+| Per-Node F1 Improvement vs Node Degree | ![F1 vs Degree](results/f1_vs_degree.png) |
+| Node-Level Heatmap: Graph Benefit (METR-LA) | ![METR-LA Heatmap](results/metrla_graph_benefit_heatmap.png) |
+| Node-Level Heatmap: Graph Benefit (Yahoo S5) | ![Yahoo S5 Heatmap](results/yahoo_s5_graph_benefit_heatmap.png) |
+| Node-Wise F1: Real Graph vs Random Graph (METR-LA) | ![METR-LA Nodewise F1](results/metrla_nodewise_f1_heatmap.png) |
+| Node-Wise F1: Real Graph vs Random Graph (Yahoo S5) | ![Yahoo S5 Nodewise F1](results/yahoo_s5_nodewise_f1_heatmap.png) |
 
 
 ---
