@@ -144,5 +144,5 @@ MIT License
 
 ---
 
-## ⚠️ Note
-See full methodology in **paper.pdf**.
+## Note
+See full methodology in [arXiv](https://arxiv.org/abs/2503.03202)
