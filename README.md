@@ -1,6 +1,8 @@
 
 # Graph-Augmented LSTM for Forecasting Sparse Anomalies in Graph-Structured Time Series
 
+[Visit arXiv](https://arxiv.org/abs/2503.03202)
+
 This repository contains code, data, and results for our paper: **"Graph-Augmented LSTM for Forecasting Sparse Anomalies in Graph-Structured Time Series."**  
 This work extends LSTM forecasting models by explicitly integrating relational graph structure between time series (e.g., sensor networks, metric dependencies) to improve detection of rare anomalies.
 
